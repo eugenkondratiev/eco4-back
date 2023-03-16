@@ -11,7 +11,13 @@ const tcpPort5 = new TcpPort(c.PLC_IPS[c.T5]);
 const client4 = new ModbusRTU(tcpPort4);
 const client5 = new ModbusRTU(tcpPort5);
 
-
+global.maindata = {
+    blr1: { timestamp: null, data: null, params: null },
+    blr2: { timestamp: null, data: null, params: null },
+    blr3: { timestamp: null, data: null, params: null },
+    blr4: { timestamp: null, data: null, params: null },
+    t5: { timestamp: null, data: null, params: null }
+}
 
 async function mainModbusPoll() {
 
@@ -42,40 +48,75 @@ async function mainModbusPoll() {
     }
 
 
-    global.dataBlr4 = [...Array(c.M340_VARIABLES_QUANTITY[c.BLR4 + c.BLR4_2])];
-    global.dataT5 = [...Array(c.M340_VARIABLES_QUANTITY[c.T5])];
-console.log("c.M340_VARIABLES_QUANTITY[c.BLR4]+c.M340_VARIABLES_QUANTITY[c.BLR4_2]  ", c.M340_VARIABLES_QUANTITY[c.BLR4],c.M340_VARIABLES_QUANTITY[c.BLR4_2]);
+    maindata.blr4.data = [...Array(c.M340_VARIABLES_QUANTITY[c.BLR4] + c.M340_VARIABLES_QUANTITY[c.BLR4_2])];
+    maindata.t5.data = [...Array(c.M340_VARIABLES_QUANTITY[c.T5])];
+    console.log("c.M340_VARIABLES_QUANTITY[c.BLR4]+c.M340_VARIABLES_QUANTITY[c.BLR4_2]  ", c.M340_VARIABLES_QUANTITY[c.BLR4], c.M340_VARIABLES_QUANTITY[c.BLR4_2]);
 
-    handler4 = setInterval(function () {
+    let handler = setInterval(function () {
         //PromiseAPI
         //client4.readHoldingRegisters(12150, 120)//c.M340_VARIABLES_QUANTITY[c.BLR4+c.BLR4_2])
-        client4.readHoldingRegisters(c.CURRENT_START_MW[c.BLR4], c.M340_VARIABLES_QUANTITY[c.BLR4]+c.M340_VARIABLES_QUANTITY[c.BLR4_2])
+        client4.readHoldingRegisters(c.CURRENT_START_MW[c.BLR4], 2 * (c.M340_VARIABLES_QUANTITY[c.BLR4] + c.M340_VARIABLES_QUANTITY[c.BLR4_2]))
             .then(data => {
 
                 const _answer = data.data;
                 const floats = m340.getFloatsFromMOdbusCoils(_answer);
                 // const floats = m340.getFloatsFromMOdbusCoils(_answer.slice(0, c.M340_VARIABLES_QUANTITY[c.BLR4 + c.BLR4_2]));
 
-                // console.log( "P9 - ", m340data[2]);
-
                 console.log(" clients[c.BLR4]  test");
 
                 floats.forEach((fl, i) => {
-                    dataBlr4[i] = fl
+                    maindata.blr4.data[i] = fl
                 });
                 // INT_DATA.forEach(i => {
                 //     dataBlr4[i] = _answer[i + c.M340_VARIABLES_QUANTITY[c.BLR4]];
                 // })
 
-                console.log("dataBlr4 - ", dataBlr4);
+                //    console.log("dataBlr4 - ", maindata.blr4.data);
             })
             .catch(err => {
                 console.log(" clients[c.BLR4]  readHoldingRegisters ERROR", err);
-                dataBlr4 = dataBlr4.map(i => null);
+                maindata.blr4.data = maindata.blr4.data.map(i => null);
+            })
+
+
+        client5.readHoldingRegisters(c.CURRENT_START_MW[c.T5], 2 * c.M340_VARIABLES_QUANTITY[c.T5])
+            .then(data => {
+
+                const _answer = data.data;
+                // console.log("T5 raw data", data.data);
+                const floats = m340.getFloatsFromMOdbusCoils(_answer);
+
+                console.log(" clients[c.T5]  test");
+
+                floats.forEach((fl, i) => {
+                    maindata.t5.data[i] = fl
+                });
+                // console.log("datat5 - ", maindata.t5.data);
+            })
+            .catch(err => {
+                console.log(" clients[c.t5]  readHoldingRegisters ERROR", err);
+                maindata.t5.data = maindata.t5.data.map(i => null);
+            });
+
+        client5.readHoldingRegisters(c.CURRENT_START_MW[c.T5] + 2 * c.M340_VARIABLES_QUANTITY[c.T5], 2 * c.M340_VARIABLES_QUANTITY[c.T5_2])
+            .then(data => {
+
+                const _answer = data.data;
+                console.log("T5 raw data  2", data.data);
+                const floats = m340.getFloatsFromMOdbusCoils(_answer);
+
+                console.log(" clients[c.T5_2]  test");
+
+                floats.forEach((fl, i) => {
+                    maindata.t5.data[i + c.M340_VARIABLES_QUANTITY[c.T5]] = fl
+                });
+                console.log("maindatat- ", maindata);
+            })
+            .catch(err => {
+                console.log(" clients[c.t5]  readHoldingRegisters ERROR", err);
+                // maindata.t5.data = maindata.t5.data.map(i => null);
             });
     }, c.DATA_COLLECT_PERIOD);
-
-    ;
 }
 
 module.exports = mainModbusPoll;
