@@ -6,6 +6,9 @@ function getLastDayString() {
 function getCurrentDayString() {
     return (new Date()).toLocaleString().slice(0, 10);
 }
+function getDateTimeStringCurrent(dt) {
+    return (new Date((new Date((new Date(new Date(dt))).toISOString())).getTime() - ((new Date()).getTimezoneOffset() * 60000))).toISOString().slice(0, 19).replace('T', ' ');
+}
 
 function getHourString(_lastDay) {
     // console.log(_lastDay);
@@ -25,7 +28,8 @@ module.exports = {
     getLastDayHourString: getLastDayHourString,
     getLastDayString: getLastDayString,
     getCurrentDayHourString: getCurrentDayHourString,
-    getCurrentLocalDateTime: getCurrentLocalDateTime
+    getCurrentLocalDateTime: getCurrentLocalDateTime,
+    getDateTimeStringCurrent: getDateTimeStringCurrent
 }
 
 

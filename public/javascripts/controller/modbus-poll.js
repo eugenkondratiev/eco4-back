@@ -30,6 +30,9 @@ async function mainModbusPoll() {
     console.log(c.BLR4);
     console.log(c.T5);
 
+
+    const getDateTimeStringCurrent = require('../utils/get-last-day').getDateTimeStringCurrent
+
     try {
         const retBLR4 = await connectPLC(client4, c.BLR4)
         console.log("retBLR4 - ", retBLR4);
@@ -65,6 +68,8 @@ async function mainModbusPoll() {
             _floats.forEach((fl, i) => {
                 maindata.blr4.data[i] = fl
             });
+
+            maindata.blr4.timestamp = getDateTimeStringCurrent((new Date()).toISOString())
         } catch (error) {
             console.log(" clients[c.BLR4]  readHoldingRegisters ERROR", error);
             maindata.blr4.data = maindata.blr4.data.map(i => null);
@@ -108,6 +113,7 @@ async function mainModbusPoll() {
                 floats.forEach((fl, i) => {
                     maindata.t5.data[i] = fl
                 });
+
                 // console.log("datat5 - ", maindata.t5.data);
             })
             .catch(err => {
@@ -127,6 +133,8 @@ async function mainModbusPoll() {
                 floats.forEach((fl, i) => {
                     maindata.t5.data[i + c.M340_VARIABLES_QUANTITY[c.T5]] = fl
                 });
+                maindata.t5.timestamp = getDateTimeStringCurrent((new Date()).toISOString())
+
                 console.log("maindatat- ", maindata);
             })
             .catch(err => {
