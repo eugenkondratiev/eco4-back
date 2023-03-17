@@ -28,7 +28,19 @@ var server = http.createServer(app);
 
 
 const mainPoll = require('../public/javascripts/controller/modbus-poll');
-
+setTimeout(async ()=>{
+  try {
+    console.log("update params test");
+    const params45 = await  require('../public/javascripts/model/update-ai-params')();
+    // console.log("params45", params45);
+    maindata.blr4.params = [...params45.prm4]
+    maindata.t5.params = [...params45.prm5]
+    
+    // console.log("update params maindata  - ", maindata);
+  } catch (error) {
+    
+  }
+}, 100)
 /**
  * Listen on provided port, on all network interfaces.
  */

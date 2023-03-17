@@ -51,32 +51,49 @@ async function mainModbusPoll() {
     maindata.blr4.data = [...Array(c.M340_VARIABLES_QUANTITY[c.BLR4] + c.M340_VARIABLES_QUANTITY[c.BLR4_2])];
     maindata.t5.data = [...Array(c.M340_VARIABLES_QUANTITY[c.T5])];
     console.log("c.M340_VARIABLES_QUANTITY[c.BLR4]+c.M340_VARIABLES_QUANTITY[c.BLR4_2]  ", c.M340_VARIABLES_QUANTITY[c.BLR4], c.M340_VARIABLES_QUANTITY[c.BLR4_2]);
+    async function pollPlc(_client, startMW, countMW) {
+        const data = await _client.readHoldingRegisters(startMW, countMW)
+        const floats = m340.getFloatsFromMOdbusCoils(data.data);
+        return floats
+    }
 
-    let handler = setInterval(function () {
+
+    let handler = setInterval(async function () {
+
+        try {
+            const _floats = await pollPlc(client4, c.CURRENT_START_MW[c.BLR4], 2 * (c.M340_VARIABLES_QUANTITY[c.BLR4] + c.M340_VARIABLES_QUANTITY[c.BLR4_2]))
+            _floats.forEach((fl, i) => {
+                maindata.blr4.data[i] = fl
+            });
+        } catch (error) {
+            console.log(" clients[c.BLR4]  readHoldingRegisters ERROR", error);
+            maindata.blr4.data = maindata.blr4.data.map(i => null);
+        }
+
         //PromiseAPI
         //client4.readHoldingRegisters(12150, 120)//c.M340_VARIABLES_QUANTITY[c.BLR4+c.BLR4_2])
-        client4.readHoldingRegisters(c.CURRENT_START_MW[c.BLR4], 2 * (c.M340_VARIABLES_QUANTITY[c.BLR4] + c.M340_VARIABLES_QUANTITY[c.BLR4_2]))
-            .then(data => {
+        // client4.readHoldingRegisters(c.CURRENT_START_MW[c.BLR4], 2 * (c.M340_VARIABLES_QUANTITY[c.BLR4] + c.M340_VARIABLES_QUANTITY[c.BLR4_2]))
+        //     .then(data => {
 
-                const _answer = data.data;
-                const floats = m340.getFloatsFromMOdbusCoils(_answer);
-                // const floats = m340.getFloatsFromMOdbusCoils(_answer.slice(0, c.M340_VARIABLES_QUANTITY[c.BLR4 + c.BLR4_2]));
+        //         const _answer = data.data;
+        //         const floats = m340.getFloatsFromMOdbusCoils(_answer);
+        //         // const floats = m340.getFloatsFromMOdbusCoils(_answer.slice(0, c.M340_VARIABLES_QUANTITY[c.BLR4 + c.BLR4_2]));
 
-                console.log(" clients[c.BLR4]  test");
+        //         console.log(" clients[c.BLR4]  test");
 
-                floats.forEach((fl, i) => {
-                    maindata.blr4.data[i] = fl
-                });
-                // INT_DATA.forEach(i => {
-                //     dataBlr4[i] = _answer[i + c.M340_VARIABLES_QUANTITY[c.BLR4]];
-                // })
+        //         floats.forEach((fl, i) => {
+        //             maindata.blr4.data[i] = fl
+        //         });
+        //         // INT_DATA.forEach(i => {
+        //         //     dataBlr4[i] = _answer[i + c.M340_VARIABLES_QUANTITY[c.BLR4]];
+        //         // })
 
-                //    console.log("dataBlr4 - ", maindata.blr4.data);
-            })
-            .catch(err => {
-                console.log(" clients[c.BLR4]  readHoldingRegisters ERROR", err);
-                maindata.blr4.data = maindata.blr4.data.map(i => null);
-            })
+        //         //    console.log("dataBlr4 - ", maindata.blr4.data);
+        //     })
+        //     .catch(err => {
+        //         console.log(" clients[c.BLR4]  readHoldingRegisters ERROR", err);
+        //         maindata.blr4.data = maindata.blr4.data.map(i => null);
+        //     })
 
 
         client5.readHoldingRegisters(c.CURRENT_START_MW[c.T5], 2 * c.M340_VARIABLES_QUANTITY[c.T5])
@@ -102,7 +119,7 @@ async function mainModbusPoll() {
             .then(data => {
 
                 const _answer = data.data;
-                console.log("T5 raw data  2", data.data);
+                // console.log("T5 raw data  2", data.data);
                 const floats = m340.getFloatsFromMOdbusCoils(_answer);
 
                 console.log(" clients[c.T5_2]  test");
@@ -114,7 +131,7 @@ async function mainModbusPoll() {
             })
             .catch(err => {
                 console.log(" clients[c.t5]  readHoldingRegisters ERROR", err);
-                // maindata.t5.data = maindata.t5.data.map(i => null);
+                maindata.t5.data = maindata.t5.data.map(i => null);
             });
     }, c.DATA_COLLECT_PERIOD);
 }
