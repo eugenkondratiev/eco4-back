@@ -75,72 +75,33 @@ async function mainModbusPoll() {
             maindata.blr4.data = maindata.blr4.data.map(i => null);
         }
 
-        //PromiseAPI
-        //client4.readHoldingRegisters(12150, 120)//c.M340_VARIABLES_QUANTITY[c.BLR4+c.BLR4_2])
-        // client4.readHoldingRegisters(c.CURRENT_START_MW[c.BLR4], 2 * (c.M340_VARIABLES_QUANTITY[c.BLR4] + c.M340_VARIABLES_QUANTITY[c.BLR4_2]))
-        //     .then(data => {
-
-        //         const _answer = data.data;
-        //         const floats = m340.getFloatsFromMOdbusCoils(_answer);
-        //         // const floats = m340.getFloatsFromMOdbusCoils(_answer.slice(0, c.M340_VARIABLES_QUANTITY[c.BLR4 + c.BLR4_2]));
-
-        //         console.log(" clients[c.BLR4]  test");
-
-        //         floats.forEach((fl, i) => {
-        //             maindata.blr4.data[i] = fl
-        //         });
-        //         // INT_DATA.forEach(i => {
-        //         //     dataBlr4[i] = _answer[i + c.M340_VARIABLES_QUANTITY[c.BLR4]];
-        //         // })
-
-        //         //    console.log("dataBlr4 - ", maindata.blr4.data);
-        //     })
-        //     .catch(err => {
-        //         console.log(" clients[c.BLR4]  readHoldingRegisters ERROR", err);
-        //         maindata.blr4.data = maindata.blr4.data.map(i => null);
-        //     })
-
-
-        client5.readHoldingRegisters(c.CURRENT_START_MW[c.T5], 2 * c.M340_VARIABLES_QUANTITY[c.T5])
-            .then(data => {
-
-                const _answer = data.data;
-                // console.log("T5 raw data", data.data);
-                const floats = m340.getFloatsFromMOdbusCoils(_answer);
-
-                console.log(" clients[c.T5]  test");
-
-                floats.forEach((fl, i) => {
-                    maindata.t5.data[i] = fl
-                });
-
-                // console.log("datat5 - ", maindata.t5.data);
-            })
-            .catch(err => {
-                console.log(" clients[c.t5]  readHoldingRegisters ERROR", err);
-                maindata.t5.data = maindata.t5.data.map(i => null);
+        try {
+            const _floats = await pollPlc(client5, c.CURRENT_START_MW[c.T5], 2 * c.M340_VARIABLES_QUANTITY[c.T5])
+            _floats.forEach((fl, i) => {
+                maindata.t5.data[i] = fl
             });
 
-        client5.readHoldingRegisters(c.CURRENT_START_MW[c.T5] + 2 * c.M340_VARIABLES_QUANTITY[c.T5], 2 * c.M340_VARIABLES_QUANTITY[c.T5_2])
-            .then(data => {
+            maindata.t5.timestamp = getDateTimeStringCurrent((new Date()).toISOString())
+        } catch (error) {
+            console.log(" clients[c.T5]  readHoldingRegisters ERROR", error);
+            maindata.t5.data = maindata.t5.data.map(i => null);
+        }
 
-                const _answer = data.data;
-                // console.log("T5 raw data  2", data.data);
-                const floats = m340.getFloatsFromMOdbusCoils(_answer);
 
-                console.log(" clients[c.T5_2]  test");
-
-                floats.forEach((fl, i) => {
-                    maindata.t5.data[i + c.M340_VARIABLES_QUANTITY[c.T5]] = fl
-                });
-                maindata.t5.timestamp = getDateTimeStringCurrent((new Date()).toISOString())
-
-                console.log("maindatat- ", maindata);
-            })
-            .catch(err => {
-                console.log(" clients[c.t5]  readHoldingRegisters ERROR", err);
-                maindata.t5.data = maindata.t5.data.map(i => null);
+        try {
+            const _floats = await pollPlc(client5, c.CURRENT_START_MW[c.T5] + 2 * c.M340_VARIABLES_QUANTITY[c.T5], 2 * c.M340_VARIABLES_QUANTITY[c.T5_2])
+            _floats.forEach((fl, i) => {
+                maindata.t5.data[i + c.M340_VARIABLES_QUANTITY[c.T5]] = fl
             });
+
+            maindata.t5.timestamp = getDateTimeStringCurrent((new Date()).toISOString())
+        } catch (error) {
+            console.log(" clients[c.T5_2]  readHoldingRegisters ERROR", error);
+            maindata.t5.data = maindata.t5.data.map(i => null);
+        }
+
+
+        console.log("maindatat- ", maindata);
     }, c.DATA_COLLECT_PERIOD);
 }
 

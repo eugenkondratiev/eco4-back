@@ -13,5 +13,11 @@ module.exports = {
     M340_VARIABLES_QUANTITY:[50,50,7,17],
     // M340_VARIABLES_QUANTITY:[50*2,68*2,7*2],
     CURRENT_START_MW : [31600, 25800],
-    HOURS_START_MW : [20000, 17000 , 31500]
+    HOURS_START_MW : [20000, 17000 , 31500],
+
+    AVG:0,
+    SUM:1,
+    MIN:2,
+    MAX:3,
+    
 }
