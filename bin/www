@@ -13,9 +13,11 @@ require('dotenv').config()
  */
 
 var port = normalizePort(process.env.PORT || '3005');
+var wsport = normalizePort(process.env.WSPORT || '8083');
+
 // const HOSTNAME =  process.env.HOST || 'localhost' ;
 //178.158.238.89
-const HOSTNAME =  process.env.HOST || '192.168.1.188'|| 'localhost' ;
+const HOSTNAME = process.env.HOST || '192.168.1.188' || 'localhost';
 
 app.set('port', port);
 
@@ -28,17 +30,17 @@ var server = http.createServer(app);
 
 
 const mainPoll = require('../public/javascripts/controller/modbus-poll');
-setTimeout(async ()=>{
+setTimeout(async () => {
   try {
     console.log("update params test");
-    const params45 = await  require('../public/javascripts/model/update-ai-params')();
+    const params45 = await require('../public/javascripts/model/update-ai-params')();
     // console.log("params45", params45);
     maindata.blr4.params = [...params45.prm4]
     maindata.t5.params = [...params45.prm5]
-    
+
     // console.log("update params maindata  - ", maindata);
   } catch (error) {
-    
+
   }
 }, 100)
 /**
@@ -78,9 +80,9 @@ function onError(error) {
     throw error;
   }
 
-  var bind = typeof port === 'string'
-    ? 'Pipe ' + port
-    : 'Port ' + port;
+  var bind = typeof port === 'string' ?
+    'Pipe ' + port :
+    'Port ' + port;
 
   // handle specific listen errors with friendly messages
   switch (error.code) {
@@ -103,17 +105,16 @@ function onError(error) {
 
 function onListening() {
   var addr = server.address();
-  var bind = typeof addr === 'string'
-    ? 'pipe ' + addr
-    : 'port ' + addr.port;
+  var bind = typeof addr === 'string' ?
+    'pipe ' + addr :
+    'port ' + addr.port;
   debug('Listening on ' + bind);
-  console.log('Listening on '  + bind);
-  console.log(JSON.stringify(addr,null," "));
+  console.log('Listening on ' + bind);
+  console.log(JSON.stringify(addr, null, " "));
 }
 
-
-
-mainPoll().catch((e)=>{
-  console.log("mainPoll ###"  , e.message
-    );
-})
+setTimeout(() => {
+  mainPoll(server).catch((e) => {
+    console.log("mainPoll ###", e.message);
+  })
+}, 2000)

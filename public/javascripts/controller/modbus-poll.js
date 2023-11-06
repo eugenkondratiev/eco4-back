@@ -12,14 +12,34 @@ const client4 = new ModbusRTU(tcpPort4);
 const client5 = new ModbusRTU(tcpPort5);
 
 global.maindata = {
-    blr1: { timestamp: null, data: null, params: null },
-    blr2: { timestamp: null, data: null, params: null },
-    blr3: { timestamp: null, data: null, params: null },
-    blr4: { timestamp: null, data: null, params: null },
-    t5: { timestamp: null, data: null, params: null }
+    blr1: {
+        timestamp: null,
+        data: null,
+        params: null
+    },
+    blr2: {
+        timestamp: null,
+        data: null,
+        params: null
+    },
+    blr3: {
+        timestamp: null,
+        data: null,
+        params: null
+    },
+    blr4: {
+        timestamp: null,
+        data: null,
+        params: null
+    },
+    t5: {
+        timestamp: null,
+        data: null,
+        params: null
+    }
 }
 
-async function mainModbusPoll() {
+async function mainModbusPoll(server) {
 
     const m340 = require('../utils/m340read');
     const logIt = require('../utils/logger');
@@ -29,6 +49,25 @@ async function mainModbusPoll() {
     console.log(c.PLC_IPS);
     console.log(c.BLR4);
     console.log(c.T5);
+
+    const io = require('socket.io')(server, {
+        cors: {
+            origin: '*'
+        }
+    })
+    io.on('connection', (socket) => {
+        socket.emit('message', 'You are connected!');
+        socket.on('little_newbie', function (username) {
+            socket.username = username;
+        });
+        socket.on('message', function (message) {
+            console.log(socket.username + ' sent a message! They\'re saying: ' + message);
+        });
+    })
+    io.sockets.on('broadcast', function (socket, username) {
+        socket.broadcast.emit('alldata', JSON.stringify(global.maindata));
+
+    });
 
 
     const getDateTimeStringCurrent = require('../utils/get-last-day').getDateTimeStringCurrent
@@ -100,7 +139,7 @@ async function mainModbusPoll() {
             maindata.t5.data = maindata.t5.data.map(i => null);
         }
 
-
+        io.sockets.emit('broadcast', 'broadcast');
         // console.log("maindatat- ", maindata);
     }, c.DATA_COLLECT_PERIOD);
 }
