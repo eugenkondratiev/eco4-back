@@ -1,7 +1,10 @@
 /**
  * just for me , I think
  */
-const LOG_PATH = "d:/js/demon/Logs/";
+
+// const LOG_PATH = "d:/js/demon/Logs/";
+const LOG_PATH = process.env.LOG_PATH;
+
 const fs = require('fs');
 
 module.exports = function (data) {

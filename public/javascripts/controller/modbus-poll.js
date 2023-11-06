@@ -101,7 +101,7 @@ async function mainModbusPoll() {
         }
 
 
-        console.log("maindatat- ", maindata);
+        // console.log("maindatat- ", maindata);
     }, c.DATA_COLLECT_PERIOD);
 }
 
