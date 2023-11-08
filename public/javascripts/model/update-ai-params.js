@@ -1,8 +1,13 @@
 const dbQuery = require('./db').dbQuery;
 
-const formParamObject = ([id, _index, _tag, _eu, _format, _caption]) => {
+const formParamObject = ([id, _index, _tag, _eu, _format, type, _caption]) => {
     return {
-        index: _index, tag: _tag, eu: _eu, format: _format, caption: _caption
+        index: _index,
+        tag: _tag,
+        eu: _eu,
+        format: _format,
+        type,
+        caption: _caption
     }
 }
 module.exports = async function () {
@@ -12,7 +17,7 @@ module.exports = async function () {
     try {
 
         params4 = (await dbQuery('SELECT * FROM eco4.paramseco4;')).rows || [];
-        
+
         // console.log("params4 - ", params4 || []);
     } catch (error) {
         console.log("params4 error - ", error);
@@ -31,6 +36,9 @@ module.exports = async function () {
 
 
 
-    return  {prm4: params4.map(formParamObject), prm5:params5.map(formParamObject)}
+    return {
+        prm4: params4.map(formParamObject),
+        prm5: params5.map(formParamObject)
+    }
 
 }

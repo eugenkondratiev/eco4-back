@@ -50,11 +50,13 @@ async function mainModbusPoll(server) {
     console.log(c.BLR4);
     console.log(c.T5);
 
-    const io = require('socket.io')(server, {
-        cors: {
-            origin: '*'
-        }
-    })
+    const io = require('socket.io')(server
+        // , {
+        // cors: {
+        //     origin: '*'
+        // }
+        // }
+    )
     io.on('connection', (socket) => {
         socket.emit('message', 'You are connected!');
         socket.on('little_newbie', function (username) {
@@ -139,7 +141,7 @@ async function mainModbusPoll(server) {
             maindata.t5.data = maindata.t5.data.map(i => null);
         }
 
-        io.sockets.emit('broadcast', 'broadcast');
+        io.sockets.emit('broadcast', JSON.stringify(global.maindata));
         // console.log("maindatat- ", maindata);
     }, c.DATA_COLLECT_PERIOD);
 }
