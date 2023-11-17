@@ -75,8 +75,8 @@ async function mainModbusPoll(server) {
     const getDateTimeStringCurrent = require('../utils/get-last-day').getDateTimeStringCurrent
 
     try {
-        const retBLR4 = await connectPLC(client4, c.BLR4)
-        console.log("retBLR4 - ", retBLR4);
+        // const retBLR4 = await connectPLC(client4, c.BLR4)
+        // console.log("retBLR4 - ", retBLR4);
 
     } catch (error) {
         logIt("connect PLC4 error" + error.message)
@@ -84,8 +84,8 @@ async function mainModbusPoll(server) {
 
     try {
 
-        const retT5 = await connectPLC(client5, c.T5)
-        console.log("retT5 - ", retT5);
+        // const retT5 = await connectPLC(client5, c.T5)
+        // console.log("retT5 - ", retT5);
     } catch (error) {
         logIt("connect PLC5 error" + error.message)
 
@@ -104,42 +104,42 @@ async function mainModbusPoll(server) {
 
     let handler = setInterval(async function () {
 
-        try {
-            const _floats = await pollPlc(client4, c.CURRENT_START_MW[c.BLR4], 2 * (c.M340_VARIABLES_QUANTITY[c.BLR4] + c.M340_VARIABLES_QUANTITY[c.BLR4_2]))
-            _floats.forEach((fl, i) => {
-                maindata.blr4.data[i] = fl
-            });
+        // try {
+        //     const _floats = await pollPlc(client4, c.CURRENT_START_MW[c.BLR4], 2 * (c.M340_VARIABLES_QUANTITY[c.BLR4] + c.M340_VARIABLES_QUANTITY[c.BLR4_2]))
+        //     _floats.forEach((fl, i) => {
+        //         maindata.blr4.data[i] = fl
+        //     });
 
-            maindata.blr4.timestamp = getDateTimeStringCurrent((new Date()).toISOString())
-        } catch (error) {
-            console.log(" clients[c.BLR4]  readHoldingRegisters ERROR", error);
-            maindata.blr4.data = maindata.blr4.data.map(i => null);
-        }
+        //     maindata.blr4.timestamp = getDateTimeStringCurrent((new Date()).toISOString())
+        // } catch (error) {
+        //     console.log(" clients[c.BLR4]  readHoldingRegisters ERROR", error);
+        //     maindata.blr4.data = maindata.blr4.data.map(i => null);
+        // }
 
-        try {
-            const _floats = await pollPlc(client5, c.CURRENT_START_MW[c.T5], 2 * c.M340_VARIABLES_QUANTITY[c.T5])
-            _floats.forEach((fl, i) => {
-                maindata.t5.data[i] = fl
-            });
+        // try {
+        //     const _floats = await pollPlc(client5, c.CURRENT_START_MW[c.T5], 2 * c.M340_VARIABLES_QUANTITY[c.T5])
+        //     _floats.forEach((fl, i) => {
+        //         maindata.t5.data[i] = fl
+        //     });
 
-            maindata.t5.timestamp = getDateTimeStringCurrent((new Date()).toISOString())
-        } catch (error) {
-            console.log(" clients[c.T5]  readHoldingRegisters ERROR", error);
-            maindata.t5.data = maindata.t5.data.map(i => null);
-        }
+        //     maindata.t5.timestamp = getDateTimeStringCurrent((new Date()).toISOString())
+        // } catch (error) {
+        //     console.log(" clients[c.T5]  readHoldingRegisters ERROR", error);
+        //     maindata.t5.data = maindata.t5.data.map(i => null);
+        // }
 
 
-        try {
-            const _floats = await pollPlc(client5, c.CURRENT_START_MW[c.T5] + 2 * c.M340_VARIABLES_QUANTITY[c.T5], 2 * c.M340_VARIABLES_QUANTITY[c.T5_2])
-            _floats.forEach((fl, i) => {
-                maindata.t5.data[i + c.M340_VARIABLES_QUANTITY[c.T5]] = fl
-            });
+        // try {
+        //     const _floats = await pollPlc(client5, c.CURRENT_START_MW[c.T5] + 2 * c.M340_VARIABLES_QUANTITY[c.T5], 2 * c.M340_VARIABLES_QUANTITY[c.T5_2])
+        //     _floats.forEach((fl, i) => {
+        //         maindata.t5.data[i + c.M340_VARIABLES_QUANTITY[c.T5]] = fl
+        //     });
 
-            maindata.t5.timestamp = getDateTimeStringCurrent((new Date()).toISOString())
-        } catch (error) {
-            console.log(" clients[c.T5_2]  readHoldingRegisters ERROR", error);
-            maindata.t5.data = maindata.t5.data.map(i => null);
-        }
+        //     maindata.t5.timestamp = getDateTimeStringCurrent((new Date()).toISOString())
+        // } catch (error) {
+        //     console.log(" clients[c.T5_2]  readHoldingRegisters ERROR", error);
+        //     maindata.t5.data = maindata.t5.data.map(i => null);
+        // }
 
         io.sockets.emit('broadcast', JSON.stringify(global.maindata));
         // console.log("maindatat- ", maindata);
