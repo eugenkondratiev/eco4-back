@@ -21,13 +21,12 @@ module.exports = async ({
 
     let resp
     try {
-        console.log("day-report  data", blr,
-            timerange);
+        // console.log("day-report  data", blr,            timerange);
         resp = await require('../model/get-day-data')(
             blr,
             timerange
-        );
-        console.log("day-report resp", resp);
+        )
+        // console.log("day-report resp", resp);
 
     } catch (error) {
         console.log("dayreport error", error);

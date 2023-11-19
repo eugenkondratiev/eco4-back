@@ -44,11 +44,11 @@ function getDayStartEndTime({
 
     const _dt = new Date(year, month - 1, day)
     _dt.setTime(_dt.getTime() + 7 * 3600000)
-    const start = new Date(_dt)
-    start.setDate(start.getDate() - 1)
+    const end = new Date(_dt)
+    end.setDate(end.getDate() + 1)
     const resp = {
-        start: start,
-        end: _dt
+        start: _dt,
+        end: end
     }
     console.log("getDayStartEndTime", resp);
     return resp

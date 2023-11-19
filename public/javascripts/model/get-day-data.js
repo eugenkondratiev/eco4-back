@@ -15,7 +15,7 @@ module.exports = async (
     try {
         ;
         const _sql = `SELECT * from ${dataTable} where dt>'${getLocalDateTimeString(_dateRange.start)}' AND dt<='${getLocalDateTimeString(_dateRange.end)}';`
-        console.log("sql dayreaport", _sql);
+        // console.log("sql dayreaport", _sql);
         const answer = (await dbQuery(_sql)).rows;
         // console.log("answer ", answer[3]);
         resp = answer.length ? {

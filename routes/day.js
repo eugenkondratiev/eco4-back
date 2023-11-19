@@ -1,6 +1,7 @@
 const router = require('express').Router();
 
 /* GET users listing. */
+
 router.get('/:blr', async function (req, res, next) {
     const {
         year = 2023,
@@ -8,16 +9,22 @@ router.get('/:blr', async function (req, res, next) {
             day = 16
     } = req.query;
 
-
+    const _blr = req.params.blr
 
     try {
         const answer = await require('../public/javascripts/controller/day-report')({
-            blr: req.params.blr,
+            blr: _blr,
             year: year,
             month: month,
             day: day
         })
-        res.send('respond with a resource  --------');
+        console.log("DAY answer", answer, answer.data);
+        answer.data ?
+            res.send({
+                params: maindata[_blr].params,
+                ...answer
+            }) :
+            res.send(answer)
     } catch (error) {
         console.log("day route error ", error);
         res.send('respond with a error ');
