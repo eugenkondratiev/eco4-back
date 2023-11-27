@@ -7,6 +7,7 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var dayRouter = require('./routes/day');
+var monthRouter = require('./routes/month');
 
 const eco4Router = require('./routes/route-eco4');
 
@@ -41,6 +42,7 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/4', eco4Router);
 app.use('/day', dayRouter);
+app.use('/month', monthRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
