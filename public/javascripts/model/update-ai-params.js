@@ -27,7 +27,7 @@ module.exports = async function () {
 
     try {
 
-        params5 = (await dbQuery('SELECT * FROM t5.paramst5;')).rows || [];
+        params5 = (await dbQuery('SELECT * FROM t5.paramseco5;')).rows || [];
         // console.log("params5 - ", params5);
     } catch (error) {
         console.log("params5 error - ", error);

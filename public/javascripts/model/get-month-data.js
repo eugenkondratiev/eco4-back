@@ -60,6 +60,7 @@ module.exports = async (
         // console.log("blrparams", blrparams[61]);
 
         for (const day of daysList) {
+
             try {
 
                 const daySql = getDayReportSql({
@@ -72,7 +73,9 @@ module.exports = async (
                 })
                 const hourRecordsQantity = dayData.length;
 
-                const dayRow = [day.replace(' 08:00:00', '')]
+                const dayRow = [day.replace(
+                    ' 08:00:00',
+                    hourRecordsQantity === 24 ? "" : `&${hourRecordsQantity}`)]
 
                 dayData.forEach(([_dt, ...hourRecord], index) => {
                     // console.log("dayData.forEach", index, hourRecord);   
