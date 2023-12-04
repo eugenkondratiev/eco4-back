@@ -30,7 +30,8 @@ module.exports = async (
     blr,
     month, year
 ) => {
-    const _dataTable = blr === "blr4" ? "`eco4`.`hours`" : "`t5`.`hours5`"
+    // const _dataTable = blr === "blr4" ? "`eco4`.`hours`" : "`t5`.`hours5`"
+    const _dataTable = require('../utils/blrtable')(blr)
 
     const daysSql = monthDatesSql({
         table: _dataTable,

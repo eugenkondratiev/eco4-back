@@ -10,7 +10,8 @@ module.exports = async (
     blr,
     _dateRange
 ) => {
-    const dataTable = blr === "blr4" ? "`eco4`.`hours`" : "`t5`.`hours5`"
+        const dataTable = require('../utils/blrtable')(blr)
+
     let resp
     try {
         ;

@@ -26,8 +26,8 @@ $(function () {
         })
     };
 
-    const socket = io.connect('http://192.168.1.188:3005');
-    // const socket = io.connect('http://178.158.238.89:3000');
+    //const socket = io.connect('http://192.168.1.188:3005');
+    const socket = io.connect('http://178.158.238.89:3000');
     const username = "testuser";
     socket.emit('little_newbie', username);
     socket.on('message', function (message) {
@@ -72,6 +72,7 @@ $(function () {
 
 
         } else {
+            console.log("$('#Eco4_P236').length  ZERO ?????", $('#Eco4_P236').length);
             ;
             data.blr4.params.forEach((ai, i) => {
                 console.log(ai.tag, ai);

@@ -31,7 +31,7 @@ router.get('/:blr', async function (req, res, next) {
             year: year,
             month: month
         })
-        console.log("MONTH answer", answer);
+        // console.log("MONTH answer", answer);
         answer.data ?
             res.send({
                 params: maindata[_blr].params,

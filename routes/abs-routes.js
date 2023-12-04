@@ -2,7 +2,7 @@
 require('dotenv').config()
 
 const views = process.env.VIEWS
-
+console.log("##### views", views)
 module.exports = {
     views: views
 }
