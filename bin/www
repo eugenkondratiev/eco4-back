@@ -38,8 +38,9 @@ setTimeout(async () => {
     maindata.blr4.params = [...params45.prm4]
     maindata.t5.params = [...params45.prm5]
     maindata.blr1.params = [...params45.prm1]
+    maindata.blr2.params = [...params45.prm2]
 
-     console.log("update params maindata blr1 - ", maindata.blr1.params);
+    // console.log("update params maindata  - ", maindata);
   } catch (error) {
 
   }

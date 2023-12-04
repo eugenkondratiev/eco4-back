@@ -1,6 +1,10 @@
 const {
-    dbQuery
+    dbQuery: dbQuery1
 } = require('./db');
+const {
+    dbQuery: dbQuery2
+} = require('./db2');
+
 
 const {
     getLocalDateTimeString
@@ -38,6 +42,10 @@ module.exports = async (
         month,
         year
     })
+    
+    const dbQuery = blr =="blr2" ? dbQuery2 :dbQuery1;
+
+
     let resp
     try {
         ;
