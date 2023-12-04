@@ -1,4 +1,5 @@
 const dbQuery = require('./db').dbQuery;
+const dbQuery2 = require('./db2').dbQuery;
 
 const formParamObject = ([id, _index, _tag, _eu, _format, type, _caption]) => {
     return {
@@ -13,6 +14,31 @@ const formParamObject = ([id, _index, _tag, _eu, _format, type, _caption]) => {
 module.exports = async function () {
     let params4
     let params5
+    let params1
+    let params2
+
+
+    try {
+
+        params1 = (await dbQuery('SELECT * FROM eco2.paramseco1;')).rows || [];
+
+        // console.log("params1 - ", params1 || []);
+    } catch (error) {
+        console.log("params4 error - ", error);
+        params1 = []
+
+    }
+
+    try {
+
+        params2 = (await dbQuery2('SELECT * FROM eco.paramseco2;')).rows || [];
+
+        // console.log("params1 - ", params1 || []);
+    } catch (error) {
+        console.log("params2 error - ", error);
+        params2 = []
+
+    }
 
     try {
 
@@ -38,7 +64,9 @@ module.exports = async function () {
 
     return {
         prm4: params4.map(formParamObject),
-        prm5: params5.map(formParamObject)
+        prm5: params5.map(formParamObject),
+        prm1: params1.map(formParamObject),
+        prm2: params2.map(formParamObject)
     }
 
 }

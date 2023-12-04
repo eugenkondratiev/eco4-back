@@ -1,6 +1,10 @@
 const {
-    dbQuery
+    dbQuery: dbQuery1
 } = require('./db');
+const {
+    dbQuery: dbQuery2
+} = require('./db2');
+
 
 const {
     getLocalDateTimeString
@@ -30,13 +34,18 @@ module.exports = async (
     blr,
     month, year
 ) => {
-    const _dataTable = blr === "blr4" ? "`eco4`.`hours`" : "`t5`.`hours5`"
+    // const _dataTable = blr === "blr4" ? "`eco4`.`hours`" : "`t5`.`hours5`"
+    const _dataTable = require('../utils/blrtable')(blr)
 
     const daysSql = monthDatesSql({
         table: _dataTable,
         month,
         year
     })
+    
+    const dbQuery = blr =="blr2" ? dbQuery2 :dbQuery1;
+
+
     let resp
     try {
         ;
