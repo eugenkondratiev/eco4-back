@@ -13,26 +13,32 @@ const getNiceMonth = (month) => {
     return month > 9 ? "" + month : "0" + month;
 }
 
+
 const getDayReportSql = ({
     table,
-    day
+    day,
+    blr
 }) => {
-    return `SELECT * FROM ${table} where dt between '${day}' and DATE_ADD('${day}', INTERVAL 23 hour);`;
+    const reportParams = blr == "el" ? "id, dt, EQ, EW" : " * "
+
+    return `SELECT ${reportParams} FROM ${table} where dt between '${day}' and DATE_ADD('${day}', INTERVAL 23 hour);`;
 
 }
 
 const monthDatesSql = ({
     table,
     month,
-    year
+    year,
+    hour = 7
 }) => {
+    const _hour = hour == 23 ? 0 : hour + 1
     const mm = getNiceMonth(month);
-    return `select distinct DATE_ADD(DATE(dt), INTERVAL 8 hour) as dtm  from ${table} where month(dt) ='${mm}' and year(dt) = '${year}' `; //order by dt asc` ; 
+    return `select distinct DATE_ADD(DATE(dt), INTERVAL ${_hour} hour) as dtm  from ${table} where month(dt) ='${mm}' and year(dt) = '${year}' `; //order by dt asc` ; 
 }
 
 module.exports = async (
     blr,
-    month, year
+    month, year, hour = 7
 ) => {
     // const _dataTable = blr === "blr4" ? "`eco4`.`hours`" : "`t5`.`hours5`"
     const _dataTable = require('../utils/blrtable')(blr)
@@ -40,11 +46,13 @@ module.exports = async (
     const daysSql = monthDatesSql({
         table: _dataTable,
         month,
-        year
+        year,
+        hour
     })
-    
-    const dbQuery = blr =="blr2" ? dbQuery2 :dbQuery1;
 
+    const dbQuery = blr == "blr2" ? dbQuery2 : dbQuery1;
+
+    const _hour = hour == 23 ? 0 : hour + 1
 
     let resp
     try {
@@ -55,7 +63,7 @@ module.exports = async (
         // console.log("answer ", answer[3]);
         const monthData = []
         const blrparams = []
-        maindata[blr].params.forEach(({
+        maindata[blr == "el" ? "t5" : blr].params.forEach(({
             index,
             ...restparam
         }, paramIndex) => {
@@ -74,16 +82,20 @@ module.exports = async (
 
                 const daySql = getDayReportSql({
                     table: _dataTable,
-                    day
+                    day,
+                    blr
                 })
 
                 const dayData = (await dbQuery(daySql)).rows.map(([id, _date, ...rest]) => {
                     return [getLocalDateTimeString(_date), ...rest]
                 })
                 const hourRecordsQantity = dayData.length;
+                const niceHour = _hour == 0 ? ' 00:00:00' :
+                    ` ${_hour < 10? "0":""}${hour}:00:00`;
 
                 const dayRow = [day.replace(
-                    ' 08:00:00',
+                    // ' 08:00:00',
+                    niceHour,
                     hourRecordsQantity === 24 ? "" : `&${hourRecordsQantity}`)]
 
                 dayData.forEach(([_dt, ...hourRecord], index) => {

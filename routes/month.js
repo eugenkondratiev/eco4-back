@@ -20,21 +20,22 @@ router.patch("/:blr", (req, res, next) => {
 router.get('/:blr', async function (req, res, next) {
     const {
         year = 2023,
-            month = 11
+            month = 11,
     } = req.query;
 
     const _blr = req.params.blr
-
+    const _hour = _blr == "el" ? 0 : 7
     try {
         const answer = await require('../public/javascripts/controller/month-report')({
             blr: _blr,
             year: year,
-            month: month
+            month: month,
+            hour: _hour
         })
         console.log("MONTH answer", answer);
         answer.data ?
             res.send({
-                params: maindata[_blr].params,
+                params: maindata[_blr == "el" ? "t5" : _blr].params,
                 ...answer
             }) :
             res.send(answer)

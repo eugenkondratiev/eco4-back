@@ -5,7 +5,8 @@ const {
 module.exports = async ({
     blr = "blr4",
     year = 2023,
-    month = 11
+    month = 11,
+    hour = 7
 }) => {
 
     // const _params = [...maindata[blr].params]
@@ -22,7 +23,8 @@ module.exports = async ({
         // console.log("day-report  data", blr,            timerange);
         resp = await require('../model/get-month-data')(
             blr,
-            month, year
+            month, year,
+            hour,      
         )
         // console.log("day-report resp", resp);
 
