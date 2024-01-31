@@ -1,8 +1,10 @@
 module.exports = {
     PLC_PORTS:[502, 502],
-    PLC_IPS:['192.168.1.104', '192.168.1.105'],
+    PLC_IPS:['192.168.1.104', '192.168.1.105', '192.168.1.100'],
     BLR4:0,
     T5:1,
+    BLR1:2,
+
     BLR4_2:2,
     T5_2:3,
     PLC_RECONNECT_DELAY: 18000,
@@ -12,7 +14,7 @@ module.exports = {
     DATA_SEND_DELAY : 1000,
     M340_VARIABLES_QUANTITY:[50,50,7,17],
     // M340_VARIABLES_QUANTITY:[50*2,68*2,7*2],
-    CURRENT_START_MW : [31600, 25800],
+    CURRENT_START_MW : [31600, 25800, 12150],
     HOURS_START_MW : [20000, 17000 , 31500],
 
     AVG:0,

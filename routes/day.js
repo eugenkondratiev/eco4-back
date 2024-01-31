@@ -18,11 +18,11 @@ router.get('/:blr', async function (req, res, next) {
             month: month,
             day: day
         })
-        console.log("DAY answer", answer.data, maindata[_blr].params, _blr);
-        
+        console.log("DAY answer", answer.data, maindata[_blr == "el" ? "t5" : _blr].params, _blr);
+
         answer.data ?
             res.send({
-                params: maindata[_blr].params,
+                params: maindata[_blr == "el" ? "t5" : _blr].params,
                 ...answer
             }) :
             res.send(answer)
