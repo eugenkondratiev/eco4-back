@@ -8,7 +8,8 @@ module.exports = async ({
     blr = "blr4",
     year = 2023,
     month = 11,
-    day = 16
+    day = 16,
+    hour = 7
 }) => {
 
     // const _params = [...maindata[blr].params]
@@ -16,7 +17,8 @@ module.exports = async ({
     const timerange = getDayStartEndTime({
         year,
         month,
-        day
+        day,
+        hour
     });
 
     let resp

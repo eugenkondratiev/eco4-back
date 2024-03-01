@@ -16,11 +16,14 @@ module.exports = async (
 ) => {
     const dataTable = require('../utils/blrtable')(blr)
     const dbQuery = blr =="blr2" ? dbQuery2 :dbQuery1;
+    const EL_REPORT_PARAMS = require('../utils/constants').EL_REPORT_PARAMETERS
 
     let resp
     try {
-        ;
-        const _sql = `SELECT * from ${dataTable} where dt>'${getLocalDateTimeString(_dateRange.start)}' AND dt<='${getLocalDateTimeString(_dateRange.end)}';`
+        const reportParams = blr == "el" ? EL_REPORT_PARAMS : " * "
+
+
+        const _sql = `SELECT ${reportParams} from ${dataTable} where dt>'${getLocalDateTimeString(_dateRange.start)}' AND dt<='${getLocalDateTimeString(_dateRange.end)}';`
         // console.log("sql dayreaport", _sql);
         const answer = (await dbQuery(_sql)).rows;
         // console.log("answer ", answer[3]);

@@ -36,6 +36,11 @@ global.maindata = {
         timestamp: null,
         data: null,
         params: null
+    },
+    el: {
+        timestamp: null,
+        data: null,
+        params: null
     }
 }
 

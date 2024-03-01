@@ -16,6 +16,7 @@ module.exports = async function () {
     let params5
     let params1
     let params2
+    let paramsEl
 
 
     try {
@@ -60,9 +61,19 @@ module.exports = async function () {
         params5 = []
     }
 
+    try {
+
+        paramsEl = (await dbQuery('SELECT * FROM t5.paramsel;')).rows || [];
+        // console.log("params5 - ", params5);
+    } catch (error) {
+        console.log("params5 error - ", error);
+        paramsEl = []
+    }
+
 
 
     return {
+        prmEl: paramsEl.map(formParamObject),
         prm4: params4.map(formParamObject),
         prm5: params5.map(formParamObject),
         prm1: params1.map(formParamObject),

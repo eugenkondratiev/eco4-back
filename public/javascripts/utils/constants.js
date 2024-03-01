@@ -21,5 +21,5 @@ module.exports = {
     SUM:1,
     MIN:2,
     MAX:3,
-    
+    EL_REPORT_PARAMETERS : "id, dt, EQ, EW, ES, EU500, EI499, PF, EF, maxEQ497, minEQ497"
 }

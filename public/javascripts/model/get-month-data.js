@@ -13,13 +13,14 @@ const getNiceMonth = (month) => {
     return month > 9 ? "" + month : "0" + month;
 }
 
+const EL_REPORT_PARAMS = require('../utils/constants').EL_REPORT_PARAMETERS
 
 const getDayReportSql = ({
     table,
     day,
     blr
 }) => {
-    const reportParams = blr == "el" ? "id, dt, EQ, EW" : " * "
+    const reportParams = blr == "el" ? EL_REPORT_PARAMS : " * "
 
     return `SELECT ${reportParams} FROM ${table} where dt between '${day}' and DATE_ADD('${day}', INTERVAL 23 hour);`;
 
@@ -63,7 +64,8 @@ module.exports = async (
         // console.log("answer ", answer[3]);
         const monthData = []
         const blrparams = []
-        maindata[blr == "el" ? "t5" : blr].params.forEach(({
+        maindata[blr].params.forEach(({
+            // maindata[blr == "el" ? "t5" : blr].params.forEach(({
             index,
             ...restparam
         }, paramIndex) => {

@@ -38,12 +38,13 @@ function getDayString({
 function getDayStartEndTime({
     year = 2023,
     month = 11,
-    day = 16
+    day = 16,
+    hour = 7
 }) {
     // console.log(_lastDay);
 
     const _dt = new Date(year, month - 1, day)
-    _dt.setTime(_dt.getTime() + 7 * 3600000)
+    _dt.setTime(_dt.getTime() + hour * 3600000)
     const end = new Date(_dt)
     end.setDate(end.getDate() + 1)
     const resp = {
